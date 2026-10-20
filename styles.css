@@ -1,14 +1,14 @@
 :root {
   color-scheme: light;
-  --blue-deep: #086da8;
-  --blue: #168bd2;
-  --blue-light: #75c6f4;
-  --yellow: #ffd21f;
+  --blue-deep: #126BAA;
+  --blue: #2E9DF7;
+  --blue-light: #8BD1CB;
+  --yellow: #FFC907;
   --ink: #102f40;
   --muted: #5d7887;
   --paper: #fffdf6;
   --line: #dce9ed;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Proxima Nova", Avenir, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -18,9 +18,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 12% 8%, rgba(255, 210, 31, .14), transparent 24rem),
-    linear-gradient(180deg, #f7fbfc 0%, #edf6f8 100%);
+  background: #F4FBFF;
 }
 
 button, a { font: inherit; }
@@ -45,19 +43,39 @@ button, a { font: inherit; }
   color: #193f50;
   text-decoration: none;
   font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: -.04em;
+  font-family: Baskerville, "Times New Roman", serif;
+  font-size: 1.12rem;
+  font-weight: 400;
+  letter-spacing: .055em;
 }
 .brand-mark {
-  display: inline-grid;
-  place-items: center;
+  position: relative;
+  display: inline-block;
   width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  color: var(--yellow);
+  height: 13px;
+  border-radius: 2px 2px 3px 3px;
   background: var(--yellow);
-  font-size: 0;
-  box-shadow: inset 0 0 0 3px #fff;
+}
+.brand-mark::before {
+  position: absolute;
+  top: -3px;
+  left: 4px;
+  width: 6px;
+  height: 3px;
+  border: 2px solid var(--yellow);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  content: "";
+}
+.brand-mark::after {
+  position: absolute;
+  top: 4px;
+  right: -3px;
+  width: 4px;
+  height: 4px;
+  border-radius: 0 2px 2px 0;
+  background: var(--yellow);
+  content: "";
 }
 .brand-colon { color: var(--blue); }
 .prototype-label {
@@ -129,7 +147,7 @@ h1 {
   min-height: 360px;
   overflow: hidden;
   isolation: isolate;
-  background: linear-gradient(180deg, #85cff5 0%, #39a5e5 47%, #1781ca 100%);
+  background: var(--blue);
 }
 .sun-glow {
   position: absolute;
@@ -139,7 +157,7 @@ h1 {
   height: 190px;
   transform: translateX(-50%);
   border-radius: 50%;
-  background: rgba(255, 245, 184, .36);
+  background: rgba(255, 255, 255, .28);
   filter: blur(8px);
 }
 .cloud {
@@ -149,7 +167,7 @@ h1 {
   height: 30px;
   border-radius: 30px;
   background: rgba(255, 255, 245, .9);
-  filter: drop-shadow(0 5px 0 rgba(255,255,255,.16));
+
 }
 .cloud::before, .cloud::after {
   position: absolute;
@@ -178,7 +196,7 @@ h1 {
   bottom: 0;
   left: 0;
   height: 21px;
-  background: linear-gradient(180deg, #f7d54a, #efc63a);
+  background: var(--yellow);
   box-shadow: 0 -5px 14px rgba(8, 83, 127, .1);
 }
 .bucket {
@@ -194,8 +212,7 @@ h1 {
   justify-content: center;
   border: 3px solid #e8ae00;
   border-radius: 7px 7px 15px 15px;
-  background: linear-gradient(145deg, #ffe45f, var(--yellow) 62%, #ffc400);
-  box-shadow: 0 7px 0 rgba(126, 94, 0, .22), 0 12px 20px rgba(5, 62, 101, .2);
+  background: var(--yellow);
   transform: translateX(-50%);
   transition: filter .15s ease;
   pointer-events: none;
@@ -208,7 +225,7 @@ h1 {
   height: 9px;
   border: 2px solid #b58400;
   border-radius: 5px;
-  background: #f4ba00;
+  background: var(--yellow);
 }
 .bucket-face { display: flex; gap: 19px; margin-top: 4px; }
 .bucket-face i { width: 6px; height: 7px; border-radius: 50%; background: #153c49; }
@@ -226,8 +243,7 @@ h1 {
   height: 28px;
   border: 2px solid rgba(255,255,255,.9);
   border-radius: 60% 60% 58% 58%;
-  background: linear-gradient(145deg, #fffef2, #c8f4ff 65%, #83d9f4);
-  box-shadow: 0 4px 10px rgba(11, 93, 145, .22), inset -3px -3px 0 rgba(60, 167, 208, .17);
+  background: #FFFFFF;
   clip-path: polygon(50% 0%, 91% 48%, 93% 62%, 88% 79%, 76% 92%, 58% 100%, 41% 98%, 24% 90%, 12% 75%, 7% 59%, 14% 43%);
 }
 .overlay {
@@ -238,7 +254,7 @@ h1 {
   place-items: center;
   padding: 18px;
   background: rgba(8, 79, 129, .19);
-  backdrop-filter: blur(2px);
+
 }
 .overlay.is-hidden { display: none; }
 .overlay-card {
@@ -247,7 +263,7 @@ h1 {
   border: 1px solid rgba(255,255,255,.85);
   border-radius: 20px;
   background: rgba(255, 253, 246, .97);
-  box-shadow: 0 16px 42px rgba(5, 53, 88, .22);
+
   text-align: center;
 }
 .overlay-card h2 { margin-bottom: 9px; font-size: 1.7rem; letter-spacing: -.05em; }
@@ -263,10 +279,10 @@ h1 {
   height: 39px;
   margin: 0 auto 13px;
   border-radius: 55% 55% 60% 60%;
-  background: linear-gradient(150deg, #8ce2f5, #158bd2);
+  background: var(--blue);
   clip-path: polygon(50% 0, 95% 57%, 97% 69%, 89% 84%, 74% 96%, 50% 100%, 26% 96%, 11% 84%, 3% 69%, 5% 57%);
 }
-.water-icon-sad { background: linear-gradient(150deg, #ffe46a, #ffc000); }
+.water-icon-sad { background: var(--yellow); }
 
 .button {
   min-height: 42px;
@@ -285,7 +301,6 @@ h1 {
   padding: 0 24px;
   color: #253c3f;
   background: var(--yellow);
-  box-shadow: 0 4px 0 #d7a900;
 }
 .button-primary:hover { background: #ffdf45; }
 .keyboard-hint { margin: 13px 0 0; color: #718795; font-size: .75rem; }
@@ -355,4 +370,23 @@ h1 {
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* A short, flat-color celebration when a new personal best is set. */
+.confetti {
+  position: absolute;
+  z-index: 6;
+  top: -16px;
+  width: 8px;
+  height: 13px;
+  border-radius: 1px;
+  background: var(--confetti-color);
+  pointer-events: none;
+  animation: confetti-fall 1.8s ease-out var(--confetti-delay) both;
+}
+@keyframes confetti-fall {
+  to {
+    transform: translateY(110vh) rotate(var(--confetti-rotation));
+    opacity: 0;
+  }
 }
