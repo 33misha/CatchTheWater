@@ -174,9 +174,9 @@
     finalScoreLabel.textContent = String(game.score);
     finalTimeLabel.textContent = formatTime(game.elapsedSeconds);
     gameOverOverlay.classList.remove("is-hidden");
-    if (game.score > game.bestAtStart) {
+    if (game.best > game.bestAtStart) {
       document.getElementById("game-over-title").textContent = "New personal best!";
-      statusLabel.textContent = "New personal best: " + game.score + (game.score === 1 ? " drop caught!" : " drops caught!");
+      statusLabel.textContent = "New personal best: " + game.best + (game.best === 1 ? " point!" : " points!");
       celebrateBestScore();
     } else {
       document.getElementById("game-over-title").textContent = "Nice try!";
