@@ -16,14 +16,18 @@
   const resetButton = document.getElementById("reset-button");
   const leftButton = document.getElementById("left-button");
   const rightButton = document.getElementById("right-button");
+  const lightningBolt = document.getElementById("lightning-bolt");
 
   const BUCKET_WIDTH = 78;
   const BUCKET_HEIGHT = 55;
   const BUCKET_SPEED = 360;
   const DROP_WIDTH = 22;
   const DROP_HEIGHT = 28;
-  const DROP_INTERVAL = 920;
+  const DROP_INTERVAL = 2000;
+  const DROP_SPEED = 300;
+  const POLLUTED_DROP_CHANCE = 1 / 8;
   const REACTION_BUFFER = 0.25;
+  const DAY_NIGHT_CYCLE_MS = 120000;
   const BEST_KEY = "catchTheWaterBestScore";
 
   const game = {
@@ -39,6 +43,7 @@
     startedAt: 0,
     elapsedSeconds: 0,
     bestAtStart: 0,
+    nextLightningAt: 0,
     loopId: 0
   };
 
@@ -105,6 +110,7 @@
     game.running = false;
     game.loopId += 1;
     clearConfetti();
+    field.classList.remove("lightning-active");
     game.leftHeld = false;
     game.rightHeld = false;
     clearDrops();
@@ -126,6 +132,8 @@
     game.bestAtStart = game.best;
     game.running = true;
     game.startedAt = performance.now();
+    game.nextLightningAt = game.startedAt + 12000;
+    field.classList.remove("lightning-active");
     game.lastFrame = game.startedAt;
     game.lastSpawn = game.startedAt;
     game.bucketX = field.clientWidth / 2;
@@ -178,8 +186,8 @@
 
   function spawnDrop(now) {
     const size = fieldSize();
-    const speed = 180 + Math.random() * 65;
-    const bucketY = size.height - 31 - BUCKET_HEIGHT;
+    const speed = DROP_SPEED;
+    const bucketY = size.height - 21 - BUCKET_HEIGHT;
     const timeToCatch = Math.max(0, bucketY / speed - REACTION_BUFFER);
     const maxTravelDistance = BUCKET_SPEED * timeToCatch;
     const horizontalCatchOverlap = (BUCKET_WIDTH + DROP_WIDTH) / 2 - 5;
@@ -191,10 +199,11 @@
     const left = Math.max(minSpawnX, reachableMinX);
     const right = Math.max(left, Math.min(maxSpawnX, reachableMaxX));
     const x = left + Math.random() * (right - left);
+    const isPolluted = Math.random() < POLLUTED_DROP_CHANCE;
     const element = document.createElement("div");
-    element.className = "drop";
+    element.className = isPolluted ? "drop polluted-drop" : "drop";
     element.setAttribute("aria-hidden", "true");
-    const drop = { x: x, y: -DROP_HEIGHT, speed: speed, element: element };
+    const drop = { x: x, y: -DROP_HEIGHT, speed: speed, isPolluted: isPolluted, element: element };
     element.style.left = x + "px";
     element.style.top = drop.y + "px";
     field.appendChild(element);
@@ -205,6 +214,67 @@
   function removeDrop(index) {
     game.drops[index].element.remove();
     game.drops.splice(index, 1);
+  }
+
+  const SKY_STOPS = [
+    { at: 0, top: [142, 213, 255], bottom: [46, 157, 247] },
+    { at: 0.30, top: [94, 186, 238], bottom: [35, 144, 221] },
+    { at: 0.50, top: [244, 172, 131], bottom: [211, 106, 93] },
+    { at: 0.68, top: [43, 60, 96], bottom: [13, 26, 49] },
+    { at: 0.88, top: [20, 28, 51], bottom: [8, 15, 30] },
+    { at: 1, top: [142, 213, 255], bottom: [46, 157, 247] }
+  ];
+
+  function toRgb(color) {
+    return "rgb(" + color.map((channel) => Math.round(channel)).join(", ") + ")";
+  }
+
+  function mixColor(a, b, amount) {
+    return a.map((value, index) => value + (b[index] - value) * amount);
+  }
+
+  function updateDayNight(now) {
+    const phase = ((now - game.startedAt) % DAY_NIGHT_CYCLE_MS) / DAY_NIGHT_CYCLE_MS;
+    let left = SKY_STOPS[0];
+    let right = SKY_STOPS[SKY_STOPS.length - 1];
+    for (let i = 0; i < SKY_STOPS.length - 1; i += 1) {
+      if (phase >= SKY_STOPS[i].at && phase <= SKY_STOPS[i + 1].at) {
+        left = SKY_STOPS[i];
+        right = SKY_STOPS[i + 1];
+        break;
+      }
+    }
+    const amount = (phase - left.at) / (right.at - left.at || 1);
+    field.style.setProperty("--sky-top", toRgb(mixColor(left.top, right.top, amount)));
+    field.style.setProperty("--sky-bottom", toRgb(mixColor(left.bottom, right.bottom, amount)));
+
+    let nightness = 0;
+    if (phase > 0.5 && phase < 0.72) {
+      const t = (phase - 0.5) / 0.22;
+      nightness = t * t * (3 - 2 * t);
+    } else if (phase >= 0.72 && phase <= 0.88) {
+      nightness = 1;
+    } else if (phase > 0.88) {
+      const t = (phase - 0.88) / 0.12;
+      const smooth = t * t * (3 - 2 * t);
+      nightness = 1 - smooth;
+    }
+    field.style.setProperty("--sun-opacity", String(1 - nightness));
+    field.style.setProperty("--moon-opacity", String(nightness));
+    field.style.setProperty("--stars-opacity", String(nightness));
+
+    if (nightness > 0.82 && now >= game.nextLightningAt) {
+      lightningBolt.style.setProperty("--bolt-left", (28 + Math.random() * 44) + "%");
+      field.classList.add("lightning-active");
+      window.setTimeout(() => field.classList.remove("lightning-active"), 170);
+      if (Math.random() < 0.45) {
+        window.setTimeout(() => {
+          field.classList.add("lightning-active");
+          window.setTimeout(() => field.classList.remove("lightning-active"), 110);
+        }, 240);
+      }
+      game.nextLightningAt = now + 8000 + Math.random() * 12000;
+    }
   }
 
   function frame(now, loopId) {
@@ -224,10 +294,11 @@
       game.elapsedSeconds = seconds;
       timerLabel.textContent = formatTime(seconds);
     }
+    updateDayNight(now);
 
     if (now - game.lastSpawn >= DROP_INTERVAL) spawnDrop(now);
 
-    const bucketY = size.height - 31 - BUCKET_HEIGHT;
+    const bucketY = size.height - 21 - BUCKET_HEIGHT;
     const groundY = size.height - 21;
 
     for (let i = game.drops.length - 1; i >= 0; i -= 1) {
@@ -241,9 +312,15 @@
 
       if (caughtHorizontally && reachedBucket) {
         removeDrop(i);
-        game.score += 1;
-        updateScore();
-        statusLabel.textContent = "Nice catch! " + game.score + (game.score === 1 ? " drop caught." : " drops caught.");
+        if (drop.isPolluted) {
+          game.score = Math.max(0, game.score - 1);
+          updateScore();
+          statusLabel.textContent = "Polluted drop! -1 point. Score: " + game.score + ".";
+        } else {
+          game.score += 1;
+          updateScore();
+          statusLabel.textContent = "Nice catch! " + game.score + (game.score === 1 ? " drop caught." : " drops caught.");
+        }
         continue;
       }
 
