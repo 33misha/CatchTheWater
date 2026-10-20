@@ -104,6 +104,7 @@
   function resetToStart() {
     game.running = false;
     game.loopId += 1;
+    clearConfetti();
     game.leftHeld = false;
     game.rightHeld = false;
     clearDrops();
