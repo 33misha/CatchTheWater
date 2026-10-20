@@ -36,8 +36,13 @@
     lastFrame: 0,
     lastSpawn: 0,
     startedAt: 0,
-    elapsedSeconds: 0
+    elapsedSeconds: 0,
+    loopId: 0
   };
+
+  document.querySelectorAll(".water-icon").forEach((icon) => {
+    icon.textContent = "";
+  });
 
   function readBestScore() {
     try {
@@ -92,6 +97,7 @@
 
   function resetToStart() {
     game.running = false;
+    game.loopId += 1;
     game.leftHeld = false;
     game.rightHeld = false;
     clearDrops();
@@ -114,6 +120,8 @@
     game.lastFrame = game.startedAt;
     game.lastSpawn = game.startedAt;
     game.bucketX = field.clientWidth / 2;
+    game.loopId += 1;
+    const loopId = game.loopId;
     scoreLabel.textContent = "0";
     timerLabel.textContent = "0:00";
     bestLabel.textContent = String(game.best);
@@ -121,12 +129,13 @@
     gameOverOverlay.classList.add("is-hidden");
     statusLabel.textContent = "Catch the falling drops!";
     placeBucket();
-    requestAnimationFrame(frame);
+    requestAnimationFrame((now) => frame(now, loopId));
   }
 
   function finishGame() {
     if (!game.running) return;
     game.running = false;
+    game.loopId += 1;
     game.leftHeld = false;
     game.rightHeld = false;
     finalScoreLabel.textContent = String(game.score);
@@ -156,8 +165,8 @@
     game.drops.splice(index, 1);
   }
 
-  function frame(now) {
-    if (!game.running) return;
+  function frame(now, loopId) {
+    if (!game.running || loopId !== game.loopId) return;
     const size = fieldSize();
     const delta = Math.min((now - game.lastFrame) / 1000, 0.04);
     game.lastFrame = now;
@@ -176,7 +185,7 @@
 
     if (now - game.lastSpawn >= DROP_INTERVAL) spawnDrop(now);
 
-    const bucketY = size.height - 21 - 31 - BUCKET_HEIGHT;
+    const bucketY = size.height - 31 - BUCKET_HEIGHT;
     const groundY = size.height - 21;
 
     for (let i = game.drops.length - 1; i >= 0; i -= 1) {
@@ -202,7 +211,7 @@
       }
     }
 
-    requestAnimationFrame(frame);
+    requestAnimationFrame((nextTime) => frame(nextTime, loopId));
   }
 
   function hold(button, direction) {
