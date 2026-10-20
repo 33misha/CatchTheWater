@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#168bd2">
+  <meta name="description" content="Catch the Water is a small game prototype inspired by charity: water's mission of clean water for all.">
+  <title>Catch the Water | charity: water game prototype</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer" aria-label="charity: water website">
+        <span class="brand-mark" aria-hidden="true">●</span>
+        <span>charity<span class="brand-colon">:</span>water</span>
+      </a>
+      <span class="prototype-label">A game prototype</span>
+    </header>
+
+    <section class="intro" aria-labelledby="game-title">
+      <p class="eyebrow">A little game about every drop</p>
+      <h1 id="game-title">Catch the Water</h1>
+      <p class="intro-copy">Move your bucket to catch the falling rain. One missed drop ends the round.</p>
+    </section>
+
+    <section class="game-card" aria-label="Catch the Water game">
+      <div class="scorebar">
+        <div class="stat">
+          <span class="stat-label">DROPS CAUGHT</span>
+          <span class="stat-value" id="score" aria-live="polite">0</span>
+        </div>
+        <div class="stat stat-center">
+          <span class="stat-label">TIME</span>
+          <span class="stat-value" id="timer" aria-live="off">0:00</span>
+        </div>
+        <div class="stat stat-right">
+          <span class="stat-label">BEST</span>
+          <span class="stat-value" id="best-score">0</span>
+        </div>
+      </div>
+
+      <div class="game-field" id="game-field" aria-label="Game area. Use the arrow keys or the movement buttons to move the bucket.">
+        <div class="sun-glow" aria-hidden="true"></div>
+        <div class="cloud cloud-one" aria-hidden="true"></div>
+        <div class="cloud cloud-two" aria-hidden="true"></div>
+        <div class="field-horizon" aria-hidden="true"></div>
+        <div class="ground" aria-hidden="true"></div>
+        <div class="bucket" id="bucket" aria-label="Your bucket">
+          <span class="bucket-rim"></span>
+          <span class="bucket-face" aria-hidden="true"><i></i><i></i></span>
+          <span class="bucket-smile" aria-hidden="true"></span>
+        </div>
+
+        <div class="overlay" id="start-overlay">
+          <div class="overlay-card">
+            <div class="water-icon" aria-hidden="true">滴</div>
+            <p class="eyebrow">Ready when you are</p>
+            <h2>Catch the rain</h2>
+            <p>Move left and right to catch each drop. Don't let one reach the ground.</p>
+            <button class="button button-primary" id="play-button" type="button">Play</button>
+            <p class="keyboard-hint">Use ← → or A / D keys</p>
+          </div>
+        </div>
+
+        <div class="overlay is-hidden" id="game-over-overlay" role="dialog" aria-modal="true" aria-labelledby="game-over-title">
+          <div class="overlay-card">
+            <div class="water-icon water-icon-sad" aria-hidden="true">滴</div>
+            <p class="eyebrow">Round complete</p>
+            <h2 id="game-over-title">A drop got away</h2>
+            <p>You caught <strong id="final-score">0</strong> drops in <strong id="final-time">0:00</strong>.</p>
+            <button class="button button-primary" id="play-again-button" type="button">Play again</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-controls">
+        <div class="movement-controls" aria-label="Movement controls">
+          <button class="button button-control" id="left-button" type="button" aria-label="Move left" title="Move left">←</button>
+          <span class="control-caption">MOVE</span>
+          <button class="button button-control" id="right-button" type="button" aria-label="Move right" title="Move right">→</button>
+        </div>
+        <button class="button button-reset" id="reset-button" type="button">Reset</button>
+      </div>
+      <p class="game-status" id="game-status" aria-live="polite">Press Play to start.</p>
+    </section>
+
+    <footer class="page-footer">
+      <p>Inspired by <a href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer">charity: water's mission</a> to bring clean and safe water to people around the world.</p>
+      <p class="footer-note">Prototype game • No real donations or transactions</p>
+    </footer>
+  </main>
+</body>
+</html>
