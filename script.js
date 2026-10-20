@@ -168,6 +168,7 @@
     if (!game.running) return;
     game.running = false;
     game.loopId += 1;
+    field.classList.remove("lightning-active");
     game.leftHeld = false;
     game.rightHeld = false;
     finalScoreLabel.textContent = String(game.score);
@@ -179,7 +180,7 @@
       celebrateBestScore();
     } else {
       document.getElementById("game-over-title").textContent = "Nice try!";
-      statusLabel.textContent = "Round over. You caught " + game.score + (game.score === 1 ? " drop." : " drops.");
+      statusLabel.textContent = "Round over. Final score: " + game.score + (game.score === 1 ? " point." : " points.");
     }
     playAgainButton.focus();
   }
@@ -266,11 +267,16 @@
     if (nightness > 0.82 && now >= game.nextLightningAt) {
       lightningBolt.style.setProperty("--bolt-left", (28 + Math.random() * 44) + "%");
       field.classList.add("lightning-active");
-      window.setTimeout(() => field.classList.remove("lightning-active"), 170);
+      window.setTimeout(() => {
+        if (game.running) field.classList.remove("lightning-active");
+      }, 170);
       if (Math.random() < 0.45) {
         window.setTimeout(() => {
+          if (!game.running) return;
           field.classList.add("lightning-active");
-          window.setTimeout(() => field.classList.remove("lightning-active"), 110);
+          window.setTimeout(() => {
+            if (game.running) field.classList.remove("lightning-active");
+          }, 110);
         }, 240);
       }
       game.nextLightningAt = now + 8000 + Math.random() * 12000;
@@ -319,7 +325,7 @@
         } else {
           game.score += 1;
           updateScore();
-          statusLabel.textContent = "Nice catch! " + game.score + (game.score === 1 ? " drop caught." : " drops caught.");
+          statusLabel.textContent = "Water drop +1. Score: " + game.score + ".";
         }
         continue;
       }
