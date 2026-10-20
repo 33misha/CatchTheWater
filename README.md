@@ -25,7 +25,7 @@ Open `index.html` in a modern browser. No build tools or packages are required.
 
 ## Game rules
 
-- Catch a blue water drop to add 1 point.
+- Catch a regular water drop to add 1 point.
 - Catch a polluted drop to subtract 1 point; the score cannot go below 0.
 - A missed drop ends the round.
 - Drops fall at a fixed speed and spawn every 2 seconds.
