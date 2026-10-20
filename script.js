@@ -23,6 +23,7 @@
   const DROP_WIDTH = 22;
   const DROP_HEIGHT = 28;
   const DROP_INTERVAL = 920;
+  const REACTION_BUFFER = 0.25;
   const BEST_KEY = "catchTheWaterBestScore";
 
   const game = {
@@ -37,6 +38,7 @@
     lastSpawn: 0,
     startedAt: 0,
     elapsedSeconds: 0,
+    bestAtStart: 0,
     loopId: 0
   };
 
@@ -86,6 +88,10 @@
     game.drops = [];
   }
 
+  function clearConfetti() {
+    field.querySelectorAll(".confetti").forEach((piece) => piece.remove());
+  }
+
   function updateScore() {
     scoreLabel.textContent = String(game.score);
     if (game.score > game.best) {
@@ -113,8 +119,10 @@
 
   function startGame() {
     clearDrops();
+    clearConfetti();
     game.score = 0;
     game.elapsedSeconds = 0;
+    game.bestAtStart = game.best;
     game.running = true;
     game.startedAt = performance.now();
     game.lastFrame = game.startedAt;
@@ -132,6 +140,21 @@
     requestAnimationFrame((now) => frame(now, loopId));
   }
 
+  function celebrateBestScore() {
+    const colors = ["#FFC907", "#2E9DF7", "#8BD1CB", "#FF902A"];
+    for (let i = 0; i < 32; i += 1) {
+      const piece = document.createElement("span");
+      piece.className = "confetti";
+      piece.setAttribute("aria-hidden", "true");
+      piece.style.left = (3 + Math.random() * 94) + "%";
+      piece.style.setProperty("--confetti-color", colors[i % colors.length]);
+      piece.style.setProperty("--confetti-delay", Math.floor(Math.random() * 260) + "ms");
+      piece.style.setProperty("--confetti-rotation", Math.floor(Math.random() * 540 - 270) + "deg");
+      field.appendChild(piece);
+      window.setTimeout(() => piece.remove(), 2300);
+    }
+  }
+
   function finishGame() {
     if (!game.running) return;
     game.running = false;
@@ -141,17 +164,35 @@
     finalScoreLabel.textContent = String(game.score);
     finalTimeLabel.textContent = formatTime(game.elapsedSeconds);
     gameOverOverlay.classList.remove("is-hidden");
-    statusLabel.textContent = "Round over. You caught " + game.score + (game.score === 1 ? " drop." : " drops.");
+    if (game.score > game.bestAtStart) {
+      document.getElementById("game-over-title").textContent = "New personal best!";
+      statusLabel.textContent = "New personal best: " + game.score + (game.score === 1 ? " drop caught!" : " drops caught!");
+      celebrateBestScore();
+    } else {
+      document.getElementById("game-over-title").textContent = "Nice try!";
+      statusLabel.textContent = "Round over. You caught " + game.score + (game.score === 1 ? " drop." : " drops.");
+    }
     playAgainButton.focus();
   }
 
   function spawnDrop(now) {
     const size = fieldSize();
+    const speed = 180 + Math.random() * 65;
+    const bucketY = size.height - 31 - BUCKET_HEIGHT;
+    const timeToCatch = Math.max(0, bucketY / speed - REACTION_BUFFER);
+    const maxTravelDistance = BUCKET_SPEED * timeToCatch;
+    const horizontalCatchOverlap = (BUCKET_WIDTH + DROP_WIDTH) / 2 - 5;
+    const minSpawnX = 16;
+    const maxSpawnX = Math.max(minSpawnX, size.width - DROP_WIDTH - 16);
+    // Reach = movement speed × usable fall time, plus the bucket/drop overlap.
+    const reachableMinX = game.bucketX - maxTravelDistance - horizontalCatchOverlap - DROP_WIDTH / 2;
+    const reachableMaxX = game.bucketX + maxTravelDistance + horizontalCatchOverlap - DROP_WIDTH / 2;
+    const left = Math.max(minSpawnX, reachableMinX);
+    const right = Math.max(left, Math.min(maxSpawnX, reachableMaxX));
+    const x = left + Math.random() * (right - left);
     const element = document.createElement("div");
     element.className = "drop";
     element.setAttribute("aria-hidden", "true");
-    const x = 16 + Math.random() * Math.max(1, size.width - DROP_WIDTH - 32);
-    const speed = 180 + Math.random() * 65;
     const drop = { x: x, y: -DROP_HEIGHT, speed: speed, element: element };
     element.style.left = x + "px";
     element.style.top = drop.y + "px";
