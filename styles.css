@@ -147,7 +147,8 @@ h1 {
   min-height: 360px;
   overflow: hidden;
   isolation: isolate;
-  background: var(--blue);
+  background: linear-gradient(180deg, var(--sky-top, #8ED5FF) 0%, var(--sky-bottom, var(--blue)) 100%);
+  transition: background 1s linear;
 }
 .sun-glow {
   position: absolute;
@@ -159,6 +160,8 @@ h1 {
   border-radius: 50%;
   background: rgba(255, 255, 255, .28);
   filter: blur(8px);
+  opacity: var(--sun-opacity, 1);
+  transition: opacity 1s linear;
 }
 .cloud {
   position: absolute;
@@ -167,7 +170,7 @@ h1 {
   height: 30px;
   border-radius: 30px;
   background: rgba(255, 255, 245, .9);
-
+  opacity: var(--cloud-opacity, .9);
 }
 .cloud::before, .cloud::after {
   position: absolute;
@@ -191,18 +194,27 @@ h1 {
 }
 .ground {
   position: absolute;
-  z-index: 2;
+  z-index: 5;
   right: 0;
   bottom: 0;
   left: 0;
   height: 21px;
-  background: var(--yellow);
+  background: #159A48;
   box-shadow: 0 -5px 14px rgba(8, 83, 127, .1);
+}
+.ground::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: rgba(255,255,255,.25);
+  content: "";
 }
 .bucket {
   position: absolute;
-  z-index: 4;
-  bottom: 31px;
+  z-index: 6;
+  bottom: 21px;
   left: 50%;
   width: 78px;
   height: 55px;
@@ -210,12 +222,35 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 3px solid #e8ae00;
-  border-radius: 7px 7px 15px 15px;
-  background: var(--yellow);
+  border: 3px solid #A57800;
+  border-radius: 6px 6px 11px 11px;
+  background: linear-gradient(145deg, #FFE77A 0%, #FFC907 52%, #E1A900 100%);
+  box-shadow: inset 0 3px 0 rgba(255,255,255,.45), inset 0 -4px 0 rgba(119,80,0,.18), 0 4px 0 rgba(10,60,86,.28);
   transform: translateX(-50%);
   transition: filter .15s ease;
   pointer-events: none;
+}
+ .bucket-handle {
+  position: absolute;
+  z-index: -1;
+  top: -15px;
+  left: 17px;
+  width: 39px;
+  height: 22px;
+  border: 4px solid #A57800;
+  border-bottom: 0;
+  border-radius: 20px 20px 0 0;
+}
+.bucket-spout {
+  position: absolute;
+  top: 7px;
+  right: -10px;
+  width: 11px;
+  height: 8px;
+  border: 2px solid #A57800;
+  border-left: 0;
+  border-radius: 0 5px 5px 0;
+  background: #FFC907;
 }
 .bucket-rim {
   position: absolute;
@@ -238,7 +273,7 @@ h1 {
 }
 .drop {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   width: 22px;
   height: 28px;
   border: 2px solid rgba(255,255,255,.9);
@@ -248,7 +283,7 @@ h1 {
 }
 .overlay {
   position: absolute;
-  z-index: 5;
+  z-index: 7;
   inset: 0;
   display: grid;
   place-items: center;
@@ -344,6 +379,15 @@ h1 {
   font-weight: 700;
   text-align: center;
 }
+.game-rules {
+  margin: 0;
+  padding: 0 18px 14px;
+  color: #536F7D;
+  background: var(--paper);
+  font-size: .76rem;
+  line-height: 1.45;
+  text-align: center;
+}
 .page-footer { padding: 18px 5px 0; text-align: center; }
 .page-footer p { margin-bottom: 5px; color: #587381; font-size: .78rem; line-height: 1.5; }
 .page-footer a { color: var(--blue-deep); font-weight: 750; }
@@ -389,4 +433,85 @@ h1 {
     transform: translateY(110vh) rotate(var(--confetti-rotation));
     opacity: 0;
   }
+}
+
+
+/* The changing sky keeps the main palette blue and yellow. */
+.moon-orb {
+  position: absolute;
+  top: 82px;
+  right: 14%;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #F5F0D7;
+  opacity: var(--moon-opacity, 0);
+  transition: opacity 1s linear;
+}
+.stars {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image:
+    radial-gradient(2px 2px at 13% 22%, #fff 65%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 30% 38%, #fff 65%, transparent 100%),
+    radial-gradient(2px 2px at 54% 18%, #fff 65%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 76% 33%, #fff 65%, transparent 100%),
+    radial-gradient(2px 2px at 89% 13%, #fff 65%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 66% 48%, #fff 65%, transparent 100%);
+  opacity: var(--stars-opacity, 0);
+  transition: opacity 1s linear;
+  pointer-events: none;
+}
+.lightning-flash {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: rgba(231, 246, 255, .62);
+  opacity: 0;
+  transition: opacity 70ms ease-out;
+  pointer-events: none;
+}
+.lightning-bolt {
+  position: absolute;
+  z-index: 3;
+  top: 45px;
+  left: var(--bolt-left, 55%);
+  width: 48px;
+  height: 230px;
+  background: #FFFCE8;
+  clip-path: polygon(58% 0, 100% 0, 67% 40%, 94% 40%, 20% 100%, 38% 55%, 8% 55%);
+  filter: drop-shadow(0 0 12px rgba(255,255,255,.9));
+  opacity: 0;
+  transform: rotate(3deg);
+  transition: opacity 65ms ease-out;
+  pointer-events: none;
+}
+.game-field.lightning-active .lightning-flash { opacity: 1; }
+.game-field.lightning-active .lightning-bolt { opacity: .96; }
+.polluted-drop {
+  border: 1px solid #D7DBE3;
+  background: #31374A;
+  box-shadow: inset -3px -3px 0 rgba(0,0,0,.22);
+}
+.polluted-drop::before {
+  position: absolute;
+  top: 7px;
+  left: 6px;
+  width: 4px;
+  height: 8px;
+  border-radius: 50%;
+  background: #D7DBE3;
+  opacity: .9;
+  content: "";
+}
+.polluted-drop::after {
+  position: absolute;
+  right: 4px;
+  bottom: 7px;
+  width: 5px;
+  height: 5px;
+  border: 1px solid #AEB5C4;
+  border-radius: 50%;
+  content: "";
 }
