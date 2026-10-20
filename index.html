@@ -43,11 +43,17 @@
 
       <div class="game-field" id="game-field" aria-label="Game area. Use the arrow keys or the movement buttons to move the bucket.">
         <div class="sun-glow" aria-hidden="true"></div>
+        <div class="moon-orb" aria-hidden="true"></div>
+        <div class="stars" aria-hidden="true"></div>
+        <div class="lightning-flash" id="lightning-flash" aria-hidden="true"></div>
+        <div class="lightning-bolt" id="lightning-bolt" aria-hidden="true"></div>
         <div class="cloud cloud-one" aria-hidden="true"></div>
         <div class="cloud cloud-two" aria-hidden="true"></div>
         <div class="field-horizon" aria-hidden="true"></div>
         <div class="ground" aria-hidden="true"></div>
         <div class="bucket" id="bucket" aria-label="Your bucket">
+          <span class="bucket-handle" aria-hidden="true"></span>
+          <span class="bucket-spout" aria-hidden="true"></span>
           <span class="bucket-rim"></span>
           <span class="bucket-face" aria-hidden="true"><i></i><i></i></span>
           <span class="bucket-smile" aria-hidden="true"></span>
@@ -58,7 +64,7 @@
             <div class="water-icon" aria-hidden="true">滴</div>
             <p class="eyebrow">Ready when you are</p>
             <h2>Catch the drops</h2>
-            <p>Move left and right to catch each drop. Don't let one reach the ground.</p>
+            <p>Catch blue drops for points. Avoid polluted drops, and don't let a drop reach the ground.</p>
             <button class="button button-primary" id="play-button" type="button">Play</button>
             <p class="keyboard-hint">Use ← → or A / D keys</p>
           </div>
@@ -84,6 +90,7 @@
         <button class="button button-reset" id="reset-button" type="button">Reset</button>
       </div>
       <p class="game-status" id="game-status" aria-live="polite">Press Play to start.</p>
+      <p class="game-rules">Blue drop: +1 point. Polluted drop: −1 point. Score stays at 0 or above. A missed drop ends the round.</p>
     </section>
 
     <footer class="page-footer">
