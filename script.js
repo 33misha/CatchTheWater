@@ -331,8 +331,11 @@
       }
 
       if (drop.y + DROP_HEIGHT >= groundY) {
-        finishGame();
-        return;
+        removeDrop(i);
+        if (!drop.isPolluted) {
+          finishGame();
+          return;
+        }
       }
     }
 
