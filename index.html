@@ -22,7 +22,7 @@
     <section class="intro" aria-labelledby="game-title">
       <p class="eyebrow">A little game about every drop</p>
       <h1 id="game-title">Catch the Water</h1>
-      <p class="intro-copy">Move your bucket to catch the falling water drops. One missed drop ends the round.</p>
+      <p class="intro-copy">Move your bucket to catch regular water drops. Avoid polluted drops; missing a regular drop ends the round.</p>
     </section>
 
     <section class="game-card" aria-label="Catch the Water game">
@@ -64,7 +64,7 @@
             <div class="water-icon" aria-hidden="true">滴</div>
             <p class="eyebrow">Ready when you are</p>
             <h2>Catch the drops</h2>
-            <p>Catch regular drops for points. Polluted drops subtract points, and a missed drop ends the round.</p>
+            <p>Catch regular drops for points. Avoid polluted drops because they subtract points. A missed regular drop ends the round; polluted drops can hit the ground safely.</p>
             <button class="button button-primary" id="play-button" type="button">Play</button>
             <p class="keyboard-hint">Use ← → or A / D keys</p>
           </div>
@@ -90,7 +90,7 @@
         <button class="button button-reset" id="reset-button" type="button">Reset</button>
       </div>
       <p class="game-status" id="game-status" aria-live="polite">Press Play to start.</p>
-      <p class="game-rules">Regular drop: +1 point. Polluted drop: −1 point (about 1 for every 7 regular drops). Score stays at 0 or above. Drops fall at a fixed speed and spawn every 2 seconds. The sky cycles from day to night every 2 minutes. A missed drop ends the round.</p>
+      <p class="game-rules">Regular drop: +1 point. Polluted drop: −1 point (about 1 for every 7 regular drops). Score stays at 0 or above. Drops fall at a fixed speed and spawn every 2 seconds. The sky cycles from day to night every 2 minutes. A missed regular drop ends the round; polluted drops can be ignored.</p>
     </section>
 
     <footer class="page-footer">
