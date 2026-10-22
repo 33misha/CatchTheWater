@@ -6,8 +6,8 @@ A responsive browser game prototype inspired by charity: water's mission to expa
 
 - Choose **Play** to start a round.
 - Move the bucket with the left and right arrow keys, A and D, or the on-screen arrow buttons.
-- Catch each falling water drop to increase your score.
-- A drop reaching the ground ends the round.
+- Catch regular drops to increase your score; avoid polluted drops because they reduce your score.
+- A missed regular drop ends the round. Polluted drops can hit the ground safely.
 - Choose **Play again** to start over, or **Reset** to return to the start screen.
 - The timer tracks how long the current round lasts. Your best score is saved in this browser.
 
@@ -27,7 +27,7 @@ Open `index.html` in a modern browser. No build tools or packages are required.
 
 - Catch a regular water drop to add 1 point.
 - Catch a polluted drop to subtract 1 point; the score cannot go below 0.
-- A missed drop ends the round.
+- A missed regular drop ends the round; polluted drops may be ignored.
 - Drops fall at a fixed speed and spawn every 2 seconds.
 - Polluted drops appear at a 1:7 ratio to regular drops (1 polluted drop for every 7 regular drops).
 - The sky completes a day-to-night-to-day cycle every 2 minutes.
