@@ -37,6 +37,8 @@
   const DASH_DURATION_MS = 180;
   const DASH_DISTANCE = 205;
   const STORM_DURATION_MS = 10000;
+  const STORM_DROP_INTERVAL = 500;
+  const STORM_DROP_COLORS = ["#FF3B30", "#FF9500", "#FFCC00", "#34C759", "#007AFF", "#5856D6", "#AF52DE"];
   const WORLD_STARTED_AT = performance.now();
   const BEST_KEY = "catchTheWaterBestScore";
 
@@ -63,6 +65,7 @@
     stormActive: false,
     stormUsed: false,
     stormUntil: 0,
+    stormDropColorIndex: 0,
     nextStormLightningAt: 0,
     loopId: 0
   };
@@ -336,6 +339,7 @@
     game.stormActive = false;
     game.stormUsed = false;
     game.stormUntil = 0;
+    game.stormDropColorIndex = 0;
     game.dashUntil = 0;
     game.dashReadyAt = 0;
     field.classList.remove("storm-active");
@@ -367,6 +371,7 @@
     game.stormActive = false;
     game.stormUsed = false;
     game.stormUntil = 0;
+    game.stormDropColorIndex = 0;
     game.nextStormLightningAt = 0;
     game.dashStartedAt = 0;
     game.dashUntil = 0;
@@ -434,6 +439,14 @@
     playAgainButton.focus();
   }
 
+  function applyStormDropStyle(drop) {
+    const color = STORM_DROP_COLORS[game.stormDropColorIndex % STORM_DROP_COLORS.length];
+    game.stormDropColorIndex += 1;
+    drop.isStormDrop = true;
+    drop.element.classList.add("storm-drop");
+    drop.element.style.setProperty("--storm-drop-color", color);
+  }
+
   function spawnDrop(now) {
     const size = fieldSize();
     const speed = DROP_SPEED;
@@ -449,13 +462,15 @@
     const left = Math.max(minSpawnX, reachableMinX);
     const right = Math.max(left, Math.min(maxSpawnX, reachableMaxX));
     const x = left + Math.random() * (right - left);
-    const isPolluted = !game.stormActive && Math.random() < POLLUTED_DROP_CHANCE;
+    const isStormDrop = game.stormActive;
+    const isPolluted = !isStormDrop && Math.random() < POLLUTED_DROP_CHANCE;
     const element = document.createElement("div");
     element.className = isPolluted ? "drop polluted-drop" : "drop";
     element.setAttribute("aria-hidden", "true");
-    const drop = { x: x, y: -DROP_HEIGHT, speed: speed, isPolluted: isPolluted, element: element };
+    const drop = { x: x, y: -DROP_HEIGHT, speed: speed, isPolluted: isPolluted, isStormDrop: isStormDrop, element: element };
     element.style.left = x + "px";
     element.style.top = drop.y + "px";
+    if (isStormDrop) applyStormDropStyle(drop);
     field.appendChild(element);
     game.drops.push(drop);
     game.lastSpawn = now;
@@ -564,13 +579,16 @@
     game.stormUsed = true;
     game.stormActive = true;
     game.stormUntil = now + STORM_DURATION_MS;
+    game.stormDropColorIndex = 0;
     game.nextStormLightningAt = now + 900;
+    game.lastSpawn = now - STORM_DROP_INTERVAL;
     field.classList.add("storm-active");
     for (let i = game.drops.length - 1; i >= 0; i -= 1) {
       if (game.drops[i].isPolluted) removeDrop(i);
     }
+    game.drops.forEach(applyStormDropStyle);
     triggerLightning();
-    statusLabel.textContent = "Thunderstorm! Safe for 10 seconds. Polluted drops are paused.";
+    statusLabel.textContent = "Thunderstorm! Catch rainbow drops for 10 seconds. Missed drops are safe.";
     updateAbilityUI(now);
   }
 
@@ -612,7 +630,8 @@
       game.elapsedSeconds = seconds;
       timerLabel.textContent = formatTime(seconds);
     }
-    if (now - game.lastSpawn >= DROP_INTERVAL) spawnDrop(now);
+    const spawnInterval = game.stormActive ? STORM_DROP_INTERVAL : DROP_INTERVAL;
+    if (now - game.lastSpawn >= spawnInterval) spawnDrop(now);
 
     const bucketY = size.height - 21 - BUCKET_HEIGHT;
     const groundY = size.height - 21;
