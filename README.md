@@ -4,12 +4,12 @@ A responsive browser game prototype inspired by charity: water's mission to expa
 
 ## Play
 
-- Choose **Play** to start a round.
-- Move the bucket with the left and right arrow keys, A and D, or the on-screen arrow buttons.
-- Catch regular drops to increase your score; avoid polluted drops because they reduce your score.
-- A missed regular drop ends the round. Polluted drops can hit the ground safely.
-- Choose **Play again** to start over, or **Reset** to return to the start screen.
-- The timer tracks how long the current round lasts. Your best score is saved in this browser.
+- Choose **Play** to start a round. The background music starts after this click; use **Sound** to mute or unmute music and effects.
+- Move with the left/right arrows, A/D, or the on-screen controls. Press **Space** or **Dash** for a short burst in your last horizontal direction; it recharges every 5 seconds.
+- Catch regular drops for points and avoid polluted drops, which subtract 1 point if caught. A missed regular drop ends the round; polluted drops can be ignored.
+- Activate **Thunderstorm** once per round for 10 seconds of visual heavy rain and protection from losing. Polluted drops disappear and stop spawning during the storm. The rain does not add score.
+- Choose **Play again** to start another round, or **Reset** to return to the start screen.
+- The timer tracks the current round. Your best score is saved in this browser.
 
 ## Run locally
 
@@ -30,9 +30,9 @@ Open `index.html` in a modern browser. No build tools or packages are required.
 - A missed regular drop ends the round; polluted drops may be ignored.
 - Drops fall at a fixed speed and spawn every 2 seconds.
 - Polluted drops appear at a 1:7 ratio to regular drops (1 polluted drop for every 7 regular drops).
-- The sky completes a day-to-night-to-day cycle every 2 minutes.
+- The sky completes a continuous day-to-night-to-day cycle every 2 minutes, including between rounds.
 - Each drop is placed within the bucket's reachable horizontal range, based on movement speed, time to the bucket, and a short reaction buffer.
 
 ## Prototype scope
 
-The prototype uses charity: water palette colors for blue and yellow, with green ground and a dark polluted-drop variation.
+The prototype uses charity: water palette colors for blue and yellow, with green ground and a dark polluted-drop variation. Background music and effects are synthesized with the browser's Web Audio API; there are no external audio files.
