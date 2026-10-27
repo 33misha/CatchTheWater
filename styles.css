@@ -148,7 +148,6 @@ h1 {
   overflow: hidden;
   isolation: isolate;
   background: linear-gradient(180deg, var(--sky-top, #8ED5FF) 0%, var(--sky-bottom, var(--blue)) 100%);
-  transition: background 1s linear;
 }
 .sun-glow {
   position: absolute;
@@ -161,7 +160,6 @@ h1 {
   background: rgba(255, 255, 255, .28);
   filter: blur(8px);
   opacity: var(--sun-opacity, 1);
-  transition: opacity 1s linear;
 }
 .cloud {
   position: absolute;
@@ -508,6 +506,7 @@ h1 {
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  .rain-layer::before, .rain-layer::after { animation-duration: 0s !important; }
 }
 
 /* A short, flat-color celebration when a new personal best is set. */
@@ -540,7 +539,6 @@ h1 {
   border-radius: 50%;
   background: #F5F0D7;
   opacity: var(--moon-opacity, 0);
-  transition: opacity 1s linear;
 }
 .stars {
   position: absolute;
@@ -554,7 +552,6 @@ h1 {
     radial-gradient(2px 2px at 89% 13%, #fff 65%, transparent 100%),
     radial-gradient(1.5px 1.5px at 66% 48%, #fff 65%, transparent 100%);
   opacity: var(--stars-opacity, 0);
-  transition: opacity 1s linear;
   pointer-events: none;
 }
 .lightning-flash {
