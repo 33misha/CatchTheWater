@@ -221,14 +221,23 @@
     soundToggleButton.setAttribute("aria-pressed", String(audioEngine.enabled));
   }
 
+  let lightningFlashToken = 0;
+
   function triggerLightning() {
+    lightningFlashToken += 1;
+    const token = lightningFlashToken;
     field.classList.add("lightning-active");
     audioEngine.playLightning();
-    window.setTimeout(() => field.classList.remove("lightning-active"), 180);
+    window.setTimeout(() => {
+      if (token === lightningFlashToken) field.classList.remove("lightning-active");
+    }, 180);
     if (Math.random() < 0.42) {
       window.setTimeout(() => {
+        if (token !== lightningFlashToken) return;
         field.classList.add("lightning-active");
-        window.setTimeout(() => field.classList.remove("lightning-active"), 120);
+        window.setTimeout(() => {
+          if (token === lightningFlashToken) field.classList.remove("lightning-active");
+        }, 120);
       }, 260);
     }
   }
@@ -513,6 +522,7 @@
 
   function animateEnvironment(now) {
     updateDayNight(now);
+    if (game.stormActive && now >= game.stormUntil) endStorm(now);
     if (game.stormActive && now >= game.nextStormLightningAt) {
       lightningBolt.style.setProperty("--bolt-left", (20 + Math.random() * 60) + "%");
       triggerLightning();
