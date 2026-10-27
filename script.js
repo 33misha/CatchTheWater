@@ -217,6 +217,22 @@
       noise(effectsGain, time, 0.09, "lowpass", 1100, 0.035);
     }
 
+    function playPollutedCatch() {
+      if (!enabled || !context) return;
+      const time = context.currentTime;
+      tone(effectsGain, 280, time, 0.24, "sawtooth", 0.11, 125);
+      tone(effectsGain, 190, time + 0.055, 0.22, "square", 0.065, 82);
+      noise(effectsGain, time, 0.14, "lowpass", 520, 0.045);
+    }
+
+    function playDeath() {
+      if (!enabled || !context) return;
+      const time = context.currentTime;
+      noise(effectsGain, time, 0.58, "lowpass", 170, 0.32);
+      tone(effectsGain, 165, time + 0.02, 0.68, "sawtooth", 0.13, 48);
+      tone(effectsGain, 92, time + 0.08, 0.54, "triangle", 0.08, 34);
+    }
+
     function playLightning() {
       if (!enabled || !context) return;
       const time = context.currentTime;
@@ -230,6 +246,8 @@
       start,
       setEnabled,
       playWaterCatch,
+      playPollutedCatch,
+      playDeath,
       playLightning
     };
   })();
@@ -338,6 +356,36 @@
     field.querySelectorAll(".confetti").forEach((piece) => piece.remove());
   }
 
+  function clearMilestoneMessages() {
+    field.querySelectorAll(".milestone-toast").forEach((toast) => toast.remove());
+  }
+
+  function showMilestoneMessage(message) {
+    clearMilestoneMessages();
+    const toast = document.createElement("div");
+    toast.className = "milestone-toast";
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    toast.setAttribute("aria-label", message);
+
+    const characters = Array.from(message);
+    characters.forEach((character, index) => {
+      const piece = document.createElement("span");
+      piece.className = character === " " ? "milestone-space" : "milestone-char";
+      piece.setAttribute("aria-hidden", "true");
+      piece.textContent = character === " " ? "\u00a0" : character;
+      const progress = index / Math.max(1, characters.length - 1);
+      piece.style.setProperty("--scatter-x", (Math.random() * 150 - 75).toFixed(1) + "px");
+      piece.style.setProperty("--scatter-y", (Math.random() * 100 - 50).toFixed(1) + "px");
+      piece.style.setProperty("--scatter-rotate", (Math.random() * 150 - 75).toFixed(1) + "deg");
+      piece.style.setProperty("--scatter-delay", (progress * 150 + Math.random() * 20).toFixed(0) + "ms");
+      toast.appendChild(piece);
+    });
+
+    field.appendChild(toast);
+    window.setTimeout(() => toast.remove(), 2000);
+  }
+
   function updateScore() {
     scoreLabel.textContent = String(game.score);
     if (game.score > game.best) {
@@ -363,6 +411,7 @@
     game.running = false;
     game.loopId += 1;
     clearConfetti();
+    clearMilestoneMessages();
     game.stormActive = false;
     game.stormUsed = false;
     game.stormUntil = 0;
@@ -395,6 +444,7 @@
   function startGame() {
     clearDrops();
     clearConfetti();
+    clearMilestoneMessages();
     game.score = 0;
     game.elapsedSeconds = 0;
     game.misses = 0;
@@ -453,6 +503,8 @@
     game.running = false;
     game.loopId += 1;
     difficultySelect.disabled = false;
+    clearMilestoneMessages();
+    audioEngine.playDeath();
     game.stormActive = false;
     game.stormUntil = 0;
     field.classList.remove("storm-active");
@@ -687,12 +739,14 @@
         removeDrop(i);
         if (drop.isPolluted) {
           game.score = Math.max(0, game.score - 1);
+          audioEngine.playPollutedCatch();
           updateScore();
           statusLabel.textContent = "Polluted drop! -1 point. Score: " + game.score + ".";
         } else {
           game.score += 1;
           audioEngine.playWaterCatch();
           const milestoneMessage = updateScore();
+          if (milestoneMessage) showMilestoneMessage(milestoneMessage);
           statusLabel.textContent = milestoneMessage || "Water drop +1. Score: " + game.score + ".";
         }
         continue;
