@@ -19,6 +19,8 @@
   const lightningBolt = document.getElementById("lightning-bolt");
   const soundToggleButton = document.getElementById("sound-toggle");
   const stormButton = document.getElementById("storm-button");
+  const difficultySelect = document.getElementById("difficulty-select");
+  const missesLabel = document.getElementById("misses-left");
   const dashButton = document.getElementById("dash-button");
   const dashIndicator = document.getElementById("dash-indicator");
   const dashIndicatorValue = document.getElementById("dash-indicator-value");
@@ -41,10 +43,23 @@
   const STORM_DROP_COLORS = ["#FF3B30", "#FF9500", "#FFCC00", "#34C759", "#007AFF", "#5856D6", "#AF52DE"];
   const WORLD_STARTED_AT = performance.now();
   const BEST_KEY = "catchTheWaterBestScore";
+  const DIFFICULTY_MODES = {
+    easy: { label: "Easy", missLimit: 3 },
+    normal: { label: "Normal", missLimit: 2 },
+    hard: { label: "Hard", missLimit: 1 }
+  };
+  const SCORE_MILESTONES = [
+    { score: 10, message: "10 points! You are building momentum." },
+    { score: 25, message: "25 points! You are on a roll." },
+    { score: 50, message: "50 points! Amazing catching." }
+  ];
 
   const game = {
     running: false,
     score: 0,
+    misses: 0,
+    difficulty: "normal",
+    announcedMilestones: new Set(),
     best: readBestScore(),
     bucketX: 0,
     drops: [],
@@ -330,6 +345,18 @@
       bestLabel.textContent = String(game.best);
       saveBestScore();
     }
+
+    const milestone = SCORE_MILESTONES.find((item) =>
+      game.score >= item.score && !game.announcedMilestones.has(item.score)
+    );
+    if (!milestone) return "";
+    game.announcedMilestones.add(milestone.score);
+    return milestone.message;
+  }
+
+  function updateMissesDisplay() {
+    const mode = DIFFICULTY_MODES[game.difficulty];
+    missesLabel.textContent = String(Math.max(0, mode.missLimit - game.misses));
   }
 
   function resetToStart() {
@@ -340,6 +367,11 @@
     game.stormUsed = false;
     game.stormUntil = 0;
     game.stormDropColorIndex = 0;
+    game.misses = 0;
+    game.difficulty = difficultySelect.value || "normal";
+    game.announcedMilestones.clear();
+    difficultySelect.disabled = false;
+    updateMissesDisplay();
     game.dashUntil = 0;
     game.dashReadyAt = 0;
     field.classList.remove("storm-active");
@@ -365,8 +397,13 @@
     clearConfetti();
     game.score = 0;
     game.elapsedSeconds = 0;
+    game.misses = 0;
+    game.difficulty = DIFFICULTY_MODES[difficultySelect.value] ? difficultySelect.value : "normal";
+    game.announcedMilestones.clear();
     game.bestAtStart = game.best;
     game.running = true;
+    difficultySelect.disabled = true;
+    updateMissesDisplay();
     game.startedAt = performance.now();
     game.stormActive = false;
     game.stormUsed = false;
@@ -390,7 +427,7 @@
     bestLabel.textContent = String(game.best);
     startOverlay.classList.add("is-hidden");
     gameOverOverlay.classList.add("is-hidden");
-    statusLabel.textContent = "Catch regular drops. Avoid polluted drops.";
+    statusLabel.textContent = DIFFICULTY_MODES[game.difficulty].label + " mode: you can miss " + DIFFICULTY_MODES[game.difficulty].missLimit + " regular drops.";
     updateAbilityUI(performance.now());
     placeBucket();
     requestAnimationFrame((now) => frame(now, loopId));
@@ -415,6 +452,7 @@
     if (!game.running) return;
     game.running = false;
     game.loopId += 1;
+    difficultySelect.disabled = false;
     game.stormActive = false;
     game.stormUntil = 0;
     field.classList.remove("storm-active");
@@ -654,8 +692,8 @@
         } else {
           game.score += 1;
           audioEngine.playWaterCatch();
-          updateScore();
-          statusLabel.textContent = "Water drop +1. Score: " + game.score + ".";
+          const milestoneMessage = updateScore();
+          statusLabel.textContent = milestoneMessage || "Water drop +1. Score: " + game.score + ".";
         }
         continue;
       }
@@ -663,8 +701,14 @@
       if (drop.y + DROP_HEIGHT >= groundY) {
         removeDrop(i);
         if (!drop.isPolluted && !game.stormActive) {
-          finishGame();
-          return;
+          game.misses += 1;
+          updateMissesDisplay();
+          if (game.misses >= DIFFICULTY_MODES[game.difficulty].missLimit) {
+            finishGame();
+            return;
+          }
+          const missesRemaining = DIFFICULTY_MODES[game.difficulty].missLimit - game.misses;
+          statusLabel.textContent = "Missed a regular drop. " + missesRemaining + (missesRemaining === 1 ? " miss" : " misses") + " left.";
         }
       }
     }
@@ -734,11 +778,20 @@
     updateSoundButton();
   });
   stormButton.addEventListener("click", activateStorm);
+  difficultySelect.addEventListener("change", () => {
+    if (game.running) return;
+    game.difficulty = DIFFICULTY_MODES[difficultySelect.value] ? difficultySelect.value : "normal";
+    game.misses = 0;
+    updateMissesDisplay();
+    statusLabel.textContent = DIFFICULTY_MODES[game.difficulty].label + " mode selected.";
+  });
   dashButton.addEventListener("click", activateDash);
   hold(leftButton, -1);
   hold(rightButton, 1);
 
   bestLabel.textContent = String(game.best);
+  difficultySelect.value = game.difficulty;
+  updateMissesDisplay();
   placeBucket();
   stormButton.disabled = true;
   dashButton.disabled = true;
