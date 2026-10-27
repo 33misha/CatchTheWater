@@ -25,7 +25,7 @@
     <section class="intro" aria-labelledby="game-title">
       <p class="eyebrow">A little game about every drop</p>
       <h1 id="game-title">Catch the Water</h1>
-      <p class="intro-copy">Move your bucket to catch regular water drops. Avoid polluted drops; missing a regular drop ends the round.</p>
+      <p class="intro-copy">Move your bucket to catch regular water drops and avoid polluted ones. Misses use up the allowance for your selected difficulty.</p>
     </section>
 
     <section class="game-card" aria-label="Catch the Water game">
@@ -40,7 +40,7 @@
         </div>
         <div class="stat stat-center">
           <span class="stat-label">MISSES LEFT</span>
-          <span class="stat-value" id="misses-left">2</span>
+          <span class="stat-value" id="misses-left" aria-live="polite">2</span>
         </div>
         <div class="stat stat-right">
           <span class="stat-label">BEST</span>
@@ -74,7 +74,7 @@
             <div class="water-icon" aria-hidden="true">滴</div>
             <p class="eyebrow">Ready when you are</p>
             <h2>Catch the drops</h2>
-            <p>Catch regular drops and avoid polluted drops. Missing a regular drop ends the round. Space dashes; Thunderstorm brings scoreable rainbow drops and protects you for 10 seconds once per round.</p>
+            <p>Catch regular drops and avoid polluted drops. Each missed regular drop uses one miss from your selected difficulty. Space dashes; Thunderstorm brings scoreable rainbow drops and protects you for 10 seconds once per round.</p>
             <button class="button button-primary" id="play-button" type="button">Play</button>
             <p class="keyboard-hint">Use ← → or A / D keys. Press Space to dash.</p>
           </div>
