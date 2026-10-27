@@ -6,6 +6,9 @@
   <meta name="theme-color" content="#2E9DF7">
   <meta name="description" content="Catch the Water is a small game prototype inspired by charity: water's mission of clean water for all.">
   <title>Catch the Water | charity: water game prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
 </head>
@@ -34,6 +37,10 @@
         <div class="stat stat-center">
           <span class="stat-label">TIME</span>
           <span class="stat-value" id="timer" aria-live="off">0:00</span>
+        </div>
+        <div class="stat stat-center">
+          <span class="stat-label">MISSES LEFT</span>
+          <span class="stat-value" id="misses-left">2</span>
         </div>
         <div class="stat stat-right">
           <span class="stat-label">BEST</span>
@@ -92,6 +99,14 @@
             <button class="button button-control" id="right-button" type="button" aria-label="Move right" title="Move right">→</button>
           </div>
           <div class="utility-controls">
+            <label class="difficulty-control" for="difficulty-select">
+              <span class="control-caption">MODE</span>
+              <select id="difficulty-select" aria-label="Select difficulty mode">
+                <option value="easy">Easy</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Hard</option>
+              </select>
+            </label>
             <button class="button button-sound" id="sound-toggle" type="button" aria-pressed="true">Sound: On</button>
             <button class="button button-reset" id="reset-button" type="button">Reset</button>
           </div>
@@ -102,11 +117,12 @@
         </div>
       </div>
       <p class="game-status" id="game-status" aria-live="polite">Press Play to start.</p>
-      <p class="game-rules">Regular drops add 1 point; polluted drops subtract 1 point and may be ignored. Missed regular drops end the round. Drops fall at one speed. Normal drops spawn every 2 seconds; Thunderstorm spawns scoreable rainbow drops every 0.5 seconds for 10 seconds. The once-per-round storm protects you from missed drops and pauses polluted drops. The sky cycles day to night and back every 2 minutes. Dash recharges every 5 seconds. Music and sound effects can be muted.</p>
+      <p class="game-rules">Regular drops add 1 point; polluted drops subtract 1 point if caught and may be ignored. Miss limits are 3 for Easy, 2 for Normal, and 1 for Hard. Drop speed stays fixed and normal drops spawn every 2 seconds. Thunderstorm adds scoreable rainbow drops every 0.5 seconds for 10 seconds, protects you from missed drops, and pauses polluted drops. Milestone messages appear at 10, 25, and 50 points. The sky cycles day to night and back every 2 minutes. Dash recharges every 5 seconds. Music and sound effects can be muted.</p>
     </section>
 
     <footer class="page-footer">
       <p>Inspired by <a href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer">charity: water's mission</a> to bring clean and safe water to people around the world.</p>
+      <p class="footer-actions"><a href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer">Visit charity: water</a><span aria-hidden="true"> · </span><a href="https://www.charitywater.org/donate" target="_blank" rel="noopener noreferrer">Donate for clean water</a></p>
       <p class="footer-note">Prototype game • No real donations or transactions</p>
     </footer>
   </main>
