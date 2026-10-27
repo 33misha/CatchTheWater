@@ -4,11 +4,11 @@ A responsive browser game prototype inspired by charity: water's mission to expa
 
 ## Play
 
-- Choose **Play** to start a round. An original chill-house loop and synthesized water-catch and thunder effects use the browser's Web Audio API. Use **Sound** to mute or unmute them.
+- Choose **Play** to start a round. An original chill-house loop and synthesized water-catch, polluted-drop, thunder, and game-over effects use the browser's Web Audio API. Use **Sound** to mute or unmute them.
 - Move with the left/right arrows, A/D, or the on-screen controls. Press **Space** or **Dash** for a short burst in your last horizontal direction; it recharges every 5 seconds.
 - Catch regular drops for points and avoid polluted drops, which subtract 1 point if caught. A missed regular drop ends the round; polluted drops can be ignored.
 - Choose **Easy**, **Normal**, or **Hard** before a round. The round ends after 3, 2, or 1 missed regular drops, respectively. The selected mode locks during play.
-- Score milestones at 10, 25, and 50 points display a message.
+- Score milestones at 10, 25, and 50 points display an animated message that scatters and fades over 2 seconds.
 - Activate **Thunderstorm** once per round for 10 seconds. It spawns scoreable rainbow water drops every 0.5 seconds at the normal falling speed, protects you from missed drops, and pauses polluted drops.
 - Choose **Play again** to start another round, or **Reset** to return to the start screen.
 - The timer tracks the current round. Your best score is saved in this browser.
