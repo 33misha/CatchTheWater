@@ -192,7 +192,7 @@
     }
 
     function playWaterCatch() {
-      if (!enabled || !ensureContext()) return;
+      if (!enabled || !context) return;
       const time = context.currentTime;
       tone(effectsGain, 740, time, 0.16, "sine", 0.13, 515);
       tone(effectsGain, 990, time + 0.045, 0.12, "sine", 0.07, 710);
@@ -200,7 +200,7 @@
     }
 
     function playLightning() {
-      if (!enabled || !ensureContext()) return;
+      if (!enabled || !context) return;
       const time = context.currentTime;
       noise(effectsGain, time, 1.8, "lowpass", 190, 0.38);
       noise(effectsGain, time, 0.16, "highpass", 1800, 0.11);
@@ -624,6 +624,7 @@
           statusLabel.textContent = "Polluted drop! -1 point. Score: " + game.score + ".";
         } else {
           game.score += 1;
+          audioEngine.playWaterCatch();
           updateScore();
           statusLabel.textContent = "Water drop +1. Score: " + game.score + ".";
         }
