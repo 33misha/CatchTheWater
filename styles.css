@@ -120,11 +120,17 @@ h1 {
 .scorebar {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-areas: "score time misses best";
+  grid-auto-flow: column;
   min-height: 72px;
   padding: 12px 18px;
   background: #fffdf6;
 }
-.stat { display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.stat { display: flex; min-width: 0; flex-direction: column; justify-content: center; gap: 2px; }
+.scorebar .stat:nth-child(1) { grid-area: score; }
+.scorebar .stat:nth-child(2) { grid-area: time; }
+.scorebar .stat:nth-child(3) { grid-area: misses; }
+.scorebar .stat:nth-child(4) { grid-area: best; }
 .stat-center { align-items: center; border-inline: 1px solid var(--line); }
 .stat-right { align-items: flex-end; }
 .stat-label {
