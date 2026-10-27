@@ -279,6 +279,11 @@ h1 {
   background: #FFFFFF;
   clip-path: polygon(50% 0%, 91% 48%, 93% 62%, 88% 79%, 76% 92%, 58% 100%, 41% 98%, 24% 90%, 12% 75%, 7% 59%, 14% 43%);
 }
+.storm-drop {
+  border-color: rgba(255,255,255,.96);
+  background: var(--storm-drop-color);
+  box-shadow: inset -3px -3px 0 rgba(0,0,0,.2), inset 3px 3px 0 rgba(255,255,255,.35);
+}
 .overlay {
   position: absolute;
   z-index: 7;
@@ -409,35 +414,7 @@ h1 {
   filter: brightness(1.15);
   box-shadow: 0 0 16px rgba(255,255,255,.8), 0 4px 0 rgba(10,60,86,.28);
 }
-.rain-layer {
-  position: absolute;
-  z-index: 3;
-  inset: -45px 0 0;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .2s ease;
-}
-.rain-layer::before, .rain-layer::after {
-  position: absolute;
-  inset: -30px -50px;
-  background-image: linear-gradient(108deg, transparent 47%, rgba(240,249,255,.58) 49%, rgba(240,249,255,.58) 51%, transparent 53%);
-  background-size: 21px 43px;
-  content: "";
-  animation: rain-fall .34s linear infinite;
-}
-.rain-layer::after {
-  opacity: .55;
-  background-size: 31px 57px;
-  animation-duration: .46s;
-  animation-direction: reverse;
-}
-.game-field.storm-active .rain-layer { opacity: .9; }
 .game-field.storm-active .cloud { opacity: .45; }
-@keyframes rain-fall {
-  from { transform: translate3d(-8px, -43px, 0); }
-  to { transform: translate3d(8px, 43px, 0); }
-}
 .button-control {
   width: 48px;
   min-height: 44px;
@@ -506,7 +483,6 @@ h1 {
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
-  .rain-layer::before, .rain-layer::after { animation-duration: 0s !important; }
 }
 
 /* A short, flat-color celebration when a new personal best is set. */
