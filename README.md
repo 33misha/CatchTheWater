@@ -4,7 +4,7 @@ A responsive browser game prototype inspired by charity: water's mission to expa
 
 ## Play
 
-- Choose **Play** to start a round. The background music starts after this click; use **Sound** to mute or unmute music and effects.
+- Choose **Play** to start a round. An original chill-house loop and synthesized water-catch and thunder effects use the browser's Web Audio API. Use **Sound** to mute or unmute them.
 - Move with the left/right arrows, A/D, or the on-screen controls. Press **Space** or **Dash** for a short burst in your last horizontal direction; it recharges every 5 seconds.
 - Catch regular drops for points and avoid polluted drops, which subtract 1 point if caught. A missed regular drop ends the round; polluted drops can be ignored.
 - Activate **Thunderstorm** once per round for 10 seconds of visual heavy rain and protection from losing. Polluted drops disappear and stop spawning during the storm. The rain does not add score.
