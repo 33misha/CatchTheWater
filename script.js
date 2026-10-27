@@ -700,7 +700,7 @@
 
       if (drop.y + DROP_HEIGHT >= groundY) {
         removeDrop(i);
-        if (!drop.isPolluted && !game.stormActive) {
+        if (!drop.isPolluted && !game.stormActive && !drop.isStormDrop) {
           game.misses += 1;
           updateMissesDisplay();
           if (game.misses >= DIFFICULTY_MODES[game.difficulty].missLimit) {
